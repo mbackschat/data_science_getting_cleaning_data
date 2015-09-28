@@ -4,7 +4,7 @@
 dataDir <- "UCI HAR Dataset"
 
 
-# Basic checks & preparation of the data for further processing
+# get the files name  for further processing
 getDataFiles <- function () {
     list(
         activities = paste(dataDir, "activity_labels.txt", sep = "/"),
@@ -19,7 +19,7 @@ getDataFiles <- function () {
 }
 
 # Tidy up the data
-tidyData <- function(datafiles) {
+readAndTidyData <- function(datafiles) {
     # get all the activities ==> Data frame with 2 columns (ID and NAME)
     activities <-
         read.table(datafiles$activities, header = F, col.names = c("id","name"))
@@ -28,6 +28,7 @@ tidyData <- function(datafiles) {
     features   <-
         read.table(datafiles$features, header = F,col.names = c("id","name"))
     
+    # Clean up the name of the features using regular expressions
     replacements <- c(function(x)
         sub("^(t|f)","\\1\\_",x),
         function(x)
@@ -82,7 +83,7 @@ tidyData <- function(datafiles) {
     
     # combine the subjects, data readings and activity labels
     tmp.df <- cbind(subjects, data.x, data.y)
-    
+
     # calculate the averages of the data values per subject and activity
     df <-
         aggregate(
@@ -93,13 +94,12 @@ tidyData <- function(datafiles) {
         )
     
     # order the rows by subject
-    df <- df[order(df$id),]
-    return(df)
+    df[order(df$id),]
 }
 
 
 
 datafiles <- getDataFiles()
-df <- tidyData(datafiles)
+df <- readAndTidyData(datafiles)
 #write.table(df, row.names = F, file = "UCI_HAR_Dataset_mean_std_Tidy.csv", sep = ",")
 write.table(df, row.names = F, file = "UCI_HAR_Dataset_mean_std_Tidy.txt")
