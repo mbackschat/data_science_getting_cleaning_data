@@ -6,6 +6,10 @@ Author: Martin Backschat
 
 The script produces a data set which contains the tidy data.
 
+The file has 181 lines:
+* 1 header line with variable names
+* 180 lines containing 6 observation rows (1 per activity) for all 30 subjects.
+
 Each row contains values for 68 variables:
 
 * "id": integer - of the subject (person). Range: [1, 30]
